@@ -61,6 +61,7 @@ habit-bloom/
 ├── frontend/          React + Vite, Dockerfile y Nginx
 ├── backend/           Express + better-sqlite3 y Dockerfile
 ├── infra/terraform/   infraestructura de Oracle Cloud
+├── infra/ansible/     configuración y despliegue de la VM
 ├── docker-compose.yml servicios y volumen persistente
 ├── CHECKLIST.md       avance de la práctica
 ├── iniciar.bat        inicio automático en Windows
@@ -102,9 +103,23 @@ docker compose up -d --no-build
 
 ## Infraestructura con Terraform
 
-La carpeta `infra/terraform` contiene la base para crear en Oracle Cloud una VCN, una subred pública, un Internet Gateway, una IP pública reservada y una VM ARM Always Free con Ubuntu 24.04. La imagen se selecciona automáticamente entre las imágenes compatibles disponibles en la región elegida. Las imágenes de la aplicación se publican para `linux/amd64` y `linux/arm64`.
+La carpeta `infra/terraform` contiene la base para crear en Oracle Cloud una VCN, una subred pública, un Internet Gateway, una IP pública reservada y una VM flexible con Ubuntu 24.04. La imagen se selecciona automáticamente entre las imágenes compatibles disponibles en la región elegida. Las imágenes de la aplicación se publican para `linux/amd64` y `linux/arm64`.
 
 Los valores reales de la cuenta se guardarán en `infra/terraform/terraform.tfvars`, archivo excluido de Git. Consulta `infra/terraform/README.md` para seguir la configuración de OCI paso a paso. No ejecutes `terraform apply` sin revisar primero el plan.
+
+## Despliegue en Oracle Cloud
+
+Habit Bloom está desplegado en una VM Ubuntu 24.04 de Oracle Cloud:
+
+- Aplicación: `http://147.15.108.94`
+- API de salud: `http://147.15.108.94/api/health`
+- Shape: `VM.Standard.E3.Flex`, 1 OCPU y 4 GB de RAM.
+- Docker y Git instalados mediante Ansible.
+- UFW activo con SSH restringido a la IP administrativa.
+- Puertos 80 y 443 habilitados en OCI, UFW e iptables.
+- SQLite persiste en un volumen Docker de la VM.
+
+El puerto 443 está preparado, pero HTTPS se configurará cuando se agregue un dominio o Cloudflare. La VM E3 consume créditos de la suscripción mientras está encendida; revisa periódicamente **Billing & Cost Management → Usage** en OCI.
 
 ## Ver la base de datos
 

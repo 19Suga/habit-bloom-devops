@@ -1,0 +1,6 @@
+[habit_bloom]
+habit-bloom ansible_host=203.0.113.20 ansible_user=ubuntu ansible_ssh_private_key_file=/root/.ssh/habit_bloom_oci
+
+[habit_bloom:vars]
+ansible_python_interpreter=/usr/bin/python3
+ssh_allowed_cidr=203.0.113.10/32

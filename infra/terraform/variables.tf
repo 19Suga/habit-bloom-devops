@@ -31,9 +31,9 @@ variable "ssh_allowed_cidr" {
 }
 
 variable "instance_shape" {
-  description = "Shape de la VM. El valor predeterminado pertenece a Always Free cuando está disponible."
+  description = "Shape flexible de la VM."
   type        = string
-  default     = "VM.Standard.A1.Flex"
+  default     = "VM.Standard.E3.Flex"
 }
 
 variable "instance_ocpus" {
@@ -43,9 +43,9 @@ variable "instance_ocpus" {
 }
 
 variable "instance_memory_gbs" {
-  description = "Memoria RAM en GB asignada a la VM flexible ARM."
+  description = "Memoria RAM en GB asignada a la VM flexible."
   type        = number
-  default     = 6
+  default     = 4
 }
 
 variable "project_name" {

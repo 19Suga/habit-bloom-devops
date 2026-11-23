@@ -1,0 +1,144 @@
+---
+- name: Configurar y desplegar Habit Bloom
+  hosts: habit_bloom
+  become: true
+  gather_facts: true
+
+  vars:
+    app_directory: /opt/habit-bloom
+
+  tasks:
+    - name: Actualizar caché de paquetes
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Instalar Docker, Git, firewall e iptables
+      ansible.builtin.apt:
+        name:
+          - docker.io
+          - docker-compose-v2
+          - git
+          - ufw
+          - iptables
+          - iptables-persistent
+        state: present
+      environment:
+        DEBIAN_FRONTEND: noninteractive
+
+    - name: Iniciar y habilitar Docker
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Agregar ubuntu al grupo Docker
+      ansible.builtin.user:
+        name: ubuntu
+        groups: docker
+        append: true
+
+    - name: Denegar conexiones entrantes por defecto
+      ansible.builtin.command: /usr/sbin/ufw default deny incoming
+      changed_when: false
+
+    - name: Permitir conexiones salientes por defecto
+      ansible.builtin.command: /usr/sbin/ufw default allow outgoing
+      changed_when: false
+
+    - name: Permitir SSH solamente desde la IP autorizada
+      ansible.builtin.command: "/usr/sbin/ufw allow from {{ ssh_allowed_cidr }} to any port 22 proto tcp"
+      register: ufw_ssh
+      changed_when: "'Rule added' in ufw_ssh.stdout"
+
+    - name: Permitir HTTP y HTTPS
+      ansible.builtin.command: "/usr/sbin/ufw allow {{ item }}/tcp"
+      loop:
+        - "80"
+        - "443"
+      register: ufw_web
+      changed_when: "'Rule added' in ufw_web.stdout"
+
+    - name: Habilitar UFW
+      ansible.builtin.command: /usr/sbin/ufw --force enable
+      register: ufw_enable
+      changed_when: "'enabled' in ufw_enable.stdout and 'already' not in ufw_enable.stdout"
+
+    - name: Crear directorio de reglas persistentes
+      ansible.builtin.file:
+        path: /etc/iptables
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Guardar reglas actuales de iptables
+      ansible.builtin.shell: /usr/sbin/iptables-save > /etc/iptables/rules.v4
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Crear directorio de la aplicación
+      ansible.builtin.file:
+        path: "{{ app_directory }}"
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: "0755"
+
+    - name: Copiar Docker Compose de producción
+      ansible.builtin.copy:
+        src: docker-compose.prod.yml
+        dest: "{{ app_directory }}/docker-compose.yml"
+        owner: ubuntu
+        group: ubuntu
+        mode: "0644"
+
+    - name: Comprobar si ya existe el archivo de entorno
+      ansible.builtin.stat:
+        path: "{{ app_directory }}/.env"
+      register: environment_file
+
+    - name: Crear secreto JWT inicial
+      ansible.builtin.set_fact:
+        generated_jwt_secret: "{{ lookup('password', '/dev/null length=64 chars=ascii_letters,digits') }}"
+      when: not environment_file.stat.exists
+      no_log: true
+
+    - name: Crear archivo de entorno protegido
+      ansible.builtin.copy:
+        content: |
+          JWT_SECRET={{ generated_jwt_secret }}
+          FRONTEND_URL=http://{{ ansible_host }}
+        dest: "{{ app_directory }}/.env"
+        owner: root
+        group: root
+        mode: "0600"
+      when: not environment_file.stat.exists
+      no_log: true
+
+    - name: Descargar imágenes de Habit Bloom
+      ansible.builtin.command: docker compose pull
+      args:
+        chdir: "{{ app_directory }}"
+      changed_when: true
+
+    - name: Levantar Habit Bloom
+      ansible.builtin.command: docker compose up -d
+      args:
+        chdir: "{{ app_directory }}"
+      changed_when: true
+
+    - name: Esperar la API de Habit Bloom
+      ansible.builtin.uri:
+        url: http://127.0.0.1/api/health
+        status_code: 200
+        return_content: true
+      register: api_health
+      retries: 12
+      delay: 5
+      until: api_health.status == 200
+
+    - name: Mostrar resultado del despliegue
+      ansible.builtin.debug:
+        msg: "Habit Bloom está saludable en http://{{ ansible_host }}"

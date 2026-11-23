@@ -35,13 +35,13 @@
 
 - [x] Código base de Terraform preparado y documentado.
 - [x] VCN, subred pública, Internet Gateway, rutas y reglas de seguridad creadas con Terraform.
-- [ ] VM ARM Ubuntu 24.04 e IP pública (pendiente de capacidad disponible en OCI São Paulo).
-- [ ] Terraform para crear VM Ubuntu 24.04, VPC, subred e IP pública.
-- [ ] Configuración de la VM con Docker y Git.
-- [ ] Firewall e iptables para los puertos 80 y 443.
-- [ ] Despliegue automático del proyecto.
+- [x] VM flexible Ubuntu 24.04 e IP pública creadas con créditos OCI.
+- [x] Terraform crea VM Ubuntu 24.04, VCN, subred e IP pública.
+- [x] Configuración de la VM con Docker y Git.
+- [x] Firewall e iptables para los puertos 80 y 443.
+- [x] Despliegue automático del proyecto.
 
 ## Puntos adicionales
 
-- [ ] Configuración de la VM con Ansible.
+- [x] Configuración de la VM con Ansible.
 - [ ] Dominio o URL mediante Cloudflare.

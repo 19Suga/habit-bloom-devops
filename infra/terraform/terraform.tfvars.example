@@ -5,7 +5,7 @@ oci_profile        = "DEFAULT"
 ssh_public_key_path = "~/.ssh/habit_bloom_oci.pub"
 ssh_allowed_cidr    = "203.0.113.10/32"
 
-# ARM Always Free. La aplicación se publica para amd64 y arm64.
-instance_shape      = "VM.Standard.A1.Flex"
+# Shape x86 flexible cubierto inicialmente por los créditos de la suscripción.
+instance_shape      = "VM.Standard.E3.Flex"
 instance_ocpus      = 1
-instance_memory_gbs = 6
+instance_memory_gbs = 4
