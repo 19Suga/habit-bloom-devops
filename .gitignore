@@ -1,0 +1,12 @@
+node_modules/
+.npm-cache/
+frontend/dist/
+backend/data/*.db
+backend/data/*.db-*
+.env
+*.log
+.playwright/
+playwright-report/
+test-results/
+.DS_Store
+.vscode/

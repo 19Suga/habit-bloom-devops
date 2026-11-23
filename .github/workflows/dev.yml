@@ -1,0 +1,61 @@
+name: DEV - Pruebas automatizadas
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dev-tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  automated-tests:
+    name: Unitarias, integración y E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Descargar repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            backend/package-lock.json
+            frontend/package-lock.json
+
+      - name: Instalar dependencias principales
+        run: npm ci
+
+      - name: Instalar dependencias del backend
+        run: npm --prefix backend ci
+
+      - name: Instalar dependencias del frontend
+        run: npm --prefix frontend ci
+
+      - name: Instalar Chromium para Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Ejecutar 6 pruebas unitarias
+        run: npm run test:unit
+
+      - name: Ejecutar 6 pruebas de integración
+        run: npm run test:integration
+
+      - name: Ejecutar 6 pruebas E2E
+        run: npm run test:e2e
+
+      - name: Comprobar compilación del frontend
+        run: npm run build
