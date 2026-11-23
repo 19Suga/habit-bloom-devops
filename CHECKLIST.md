@@ -28,8 +28,8 @@
 - [x] Archivos `.dockerignore` para frontend y backend.
 - [x] Imágenes construidas y contenedores saludables en Docker local.
 - [x] Frontend, API, registro y persistencia verificados localmente.
-- [ ] Pipeline de GitHub Actions en `main`.
-- [ ] Construcción de imágenes y publicación en Docker Hub.
+- [x] Pipeline de GitHub Actions en `main`.
+- [x] Construcción de imágenes y publicación en Docker Hub.
 
 ## Etapa 4 — Infraestructura
 

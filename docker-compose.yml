@@ -1,5 +1,6 @@
 services:
   backend:
+    image: rln24/habit-bloom-backend:latest
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -16,6 +17,7 @@ services:
     restart: unless-stopped
 
   frontend:
+    image: rln24/habit-bloom-frontend:latest
     build:
       context: ./frontend
       dockerfile: Dockerfile

@@ -85,6 +85,20 @@ Antes de ejecutar las pruebas E2E por primera vez, instala Chromium con `npx pla
 
 El workflow `.github/workflows/dev.yml` ejecuta las 18 pruebas automatizadas y compila el frontend en cada `push` a `dev` y en cada pull request dirigido a `dev`. También puede iniciarse manualmente desde GitHub Actions.
 
+El workflow `.github/workflows/main.yml` construye las imágenes del frontend y backend en cada `push` a `main` y las publica en Docker Hub con las etiquetas `latest` y el SHA del commit:
+
+- `rln24/habit-bloom-frontend`
+- `rln24/habit-bloom-backend`
+
+El repositorio de GitHub necesita los secretos `DOCKERHUB_USERNAME` y `DOCKERHUB_TOKEN`. Ambos están configurados en GitHub Actions; sus valores no se guardan en el código.
+
+Para descargar las imágenes publicadas sin reconstruirlas localmente:
+
+```bash
+docker compose pull
+docker compose up -d --no-build
+```
+
 ## Ver la base de datos
 
 `backend/data/habit-bloom.db` es un archivo binario SQLite, por lo que no se puede leer como un archivo de texto. Para consultar sus datos sin instalar nada adicional, ejecuta `npm run db:show` desde la carpeta principal. También puedes instalar en VS Code una extensión como **SQLite Viewer** y abrir el archivo con esa extensión.
