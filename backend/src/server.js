@@ -14,9 +14,10 @@ const allowedColors = new Set(['rose', 'lavender', 'sage', 'peach']);
 
 const configuredOrigin = process.env.FRONTEND_URL;
 const isLocalDevelopmentOrigin = (origin) => /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin);
+const isCloudflareQuickTunnelOrigin = (origin) => /^https:\/\/[a-z0-9-]+\.trycloudflare\.com$/i.test(origin);
 app.use(cors({
   origin(origin, callback) {
-    if (!origin || origin === configuredOrigin || isLocalDevelopmentOrigin(origin)) {
+    if (!origin || origin === configuredOrigin || isLocalDevelopmentOrigin(origin) || isCloudflareQuickTunnelOrigin(origin)) {
       return callback(null, true);
     }
     return callback(new Error('Origen no permitido por CORS.'));

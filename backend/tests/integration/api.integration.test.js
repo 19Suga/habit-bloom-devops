@@ -49,6 +49,16 @@ describe('API de Habit Bloom', () => {
     expect(db.prepare('SELECT name, email FROM users').get()).toEqual({ name: 'Ana', email: 'ana@example.com' });
   });
 
+  it('permite registrar desde una URL HTTPS temporal de Cloudflare', async () => {
+    const origin = 'https://habit-bloom-demo.trycloudflare.com';
+    const response = await request(app).post('/api/auth/register')
+      .set('Origin', origin)
+      .send({ name: 'Cloudflare', email: 'cloudflare@example.com', password: 'secreto123' });
+
+    expect(response.status).toBe(201);
+    expect(response.headers['access-control-allow-origin']).toBe(origin);
+  });
+
   it('rechaza un correo que ya está registrado', async () => {
     await registerUser();
     const response = await registerUser();

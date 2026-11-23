@@ -77,15 +77,15 @@ La base de datos se crea automáticamente en `backend/data/habit-bloom.db`. No d
 - `npm start`: inicia solamente la API.
 - `npm run db:show`: muestra en la terminal los usuarios, hábitos y registros guardados en SQLite.
 - `npm run test:unit`: ejecuta las 6 pruebas unitarias.
-- `npm run test:integration`: ejecuta las 6 pruebas de integración.
+- `npm run test:integration`: ejecuta las 7 pruebas de integración.
 - `npm run test:e2e`: ejecuta las 6 pruebas E2E con Playwright.
-- `npm test`: ejecuta las 18 pruebas en orden.
+- `npm test`: ejecuta las 19 pruebas en orden.
 
 Antes de ejecutar las pruebas E2E por primera vez, instala Chromium con `npx playwright install chromium`.
 
 ## Integración continua
 
-El workflow `.github/workflows/dev.yml` ejecuta las 18 pruebas automatizadas y compila el frontend en cada `push` a `dev` y en cada pull request dirigido a `dev`. También puede iniciarse manualmente desde GitHub Actions.
+El workflow `.github/workflows/dev.yml` ejecuta las 19 pruebas automatizadas y compila el frontend en cada `push` a `dev` y en cada pull request dirigido a `dev`. También puede iniciarse manualmente desde GitHub Actions.
 
 El workflow `.github/workflows/main.yml` construye las imágenes del frontend y backend en cada `push` a `main` y las publica en Docker Hub con las etiquetas `latest` y el SHA del commit:
 
@@ -113,13 +113,15 @@ Habit Bloom está desplegado en una VM Ubuntu 24.04 de Oracle Cloud:
 
 - Aplicación: `http://147.15.108.94`
 - API de salud: `http://147.15.108.94/api/health`
+- Cloudflare HTTPS: `https://mumbai-saved-incorporated-beverages.trycloudflare.com`
+- API mediante Cloudflare: `https://mumbai-saved-incorporated-beverages.trycloudflare.com/api/health`
 - Shape: `VM.Standard.E3.Flex`, 1 OCPU y 4 GB de RAM.
 - Docker y Git instalados mediante Ansible.
 - UFW activo con SSH restringido a la IP administrativa.
 - Puertos 80 y 443 habilitados en OCI, UFW e iptables.
 - SQLite persiste en un volumen Docker de la VM.
 
-El puerto 443 está preparado, pero HTTPS se configurará cuando se agregue un dominio o Cloudflare. La VM E3 consume créditos de la suscripción mientras está encendida; revisa periódicamente **Billing & Cost Management → Usage** en OCI.
+El contenedor `cloudflared` crea un Quick Tunnel gratuito con HTTPS. Esta URL es apropiada para la demostración, pero es temporal y cambiará si se vuelve a crear el contenedor; un dominio administrado en Cloudflare permitiría usar una dirección permanente. La VM E3 consume créditos de la suscripción mientras está encendida; revisa periódicamente **Billing & Cost Management → Usage** en OCI.
 
 ## Ver la base de datos
 

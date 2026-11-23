@@ -44,4 +44,4 @@
 ## Puntos adicionales
 
 - [x] Configuración de la VM con Ansible.
-- [ ] Dominio o URL mediante Cloudflare.
+- [x] URL HTTPS mediante Cloudflare Quick Tunnel.

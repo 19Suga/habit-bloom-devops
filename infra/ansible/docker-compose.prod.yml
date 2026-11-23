@@ -20,5 +20,13 @@ services:
       - "80:80"
     restart: unless-stopped
 
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate --url http://frontend:80
+    depends_on:
+      frontend:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   habit_bloom_data:
