@@ -21,7 +21,6 @@
           - git
           - ufw
           - iptables
-          - iptables-persistent
         state: present
       environment:
         DEBIAN_FRONTEND: noninteractive
@@ -63,6 +62,51 @@
       ansible.builtin.command: /usr/sbin/ufw --force enable
       register: ufw_enable
       changed_when: "'enabled' in ufw_enable.stdout and 'already' not in ufw_enable.stdout"
+
+    - name: Priorizar HTTP y HTTPS antes de las reglas base de OCI
+      ansible.builtin.shell: |
+        if /usr/sbin/iptables -C INPUT -p tcp --dport {{ item }} -j ACCEPT 2>/dev/null; then
+          echo exists
+        else
+          /usr/sbin/iptables -I INPUT 1 -p tcp --dport {{ item }} -j ACCEPT
+          echo added
+        fi
+      args:
+        executable: /bin/bash
+      loop:
+        - "80"
+        - "443"
+      register: iptables_web_input
+      changed_when: "'added' in iptables_web_input.stdout"
+
+    - name: Permitir respuestas de conexiones reenviadas a los contenedores
+      ansible.builtin.shell: |
+        if /usr/sbin/iptables -C DOCKER-USER -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT 2>/dev/null; then
+          echo exists
+        else
+          /usr/sbin/iptables -I DOCKER-USER 1 -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+          echo added
+        fi
+      args:
+        executable: /bin/bash
+      register: iptables_container_responses
+      changed_when: "'added' in iptables_container_responses.stdout"
+
+    - name: Permitir tráfico web reenviado a los contenedores
+      ansible.builtin.shell: |
+        if /usr/sbin/iptables -C DOCKER-USER -p tcp --dport {{ item }} -j ACCEPT 2>/dev/null; then
+          echo exists
+        else
+          /usr/sbin/iptables -I DOCKER-USER 1 -p tcp --dport {{ item }} -j ACCEPT
+          echo added
+        fi
+      args:
+        executable: /bin/bash
+      loop:
+        - "80"
+        - "443"
+      register: iptables_web_forward
+      changed_when: "'added' in iptables_web_forward.stdout"
 
     - name: Crear directorio de reglas persistentes
       ansible.builtin.file:

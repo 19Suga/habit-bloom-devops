@@ -7,7 +7,7 @@ El playbook configura la VM Ubuntu creada por Terraform:
 - configura UFW con entrada denegada por defecto;
 - restringe SSH a la IP indicada en el inventario;
 - habilita los puertos 80 y 443;
-- guarda las reglas mediante `iptables-persistent`;
+- guarda una copia de las reglas en `/etc/iptables/rules.v4`;
 - descarga las imágenes públicas de Docker Hub;
 - crea un secreto JWT local en la VM;
 - levanta Habit Bloom y verifica `/api/health`.
