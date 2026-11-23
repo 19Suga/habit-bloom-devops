@@ -33,6 +33,7 @@
 
 ## Etapa 4 — Infraestructura
 
+- [x] Código base de Terraform preparado y documentado.
 - [ ] Terraform para crear VM Ubuntu 24.04, VPC, subred e IP pública.
 - [ ] Configuración de la VM con Docker y Git.
 - [ ] Firewall e iptables para los puertos 80 y 443.

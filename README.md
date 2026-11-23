@@ -60,6 +60,7 @@ Para personalizar `JWT_SECRET` y `APP_TIMEZONE`, crea un archivo `.env` desde `.
 habit-bloom/
 ├── frontend/          React + Vite, Dockerfile y Nginx
 ├── backend/           Express + better-sqlite3 y Dockerfile
+├── infra/terraform/   infraestructura de Oracle Cloud
 ├── docker-compose.yml servicios y volumen persistente
 ├── CHECKLIST.md       avance de la práctica
 ├── iniciar.bat        inicio automático en Windows
@@ -98,6 +99,12 @@ Para descargar las imágenes publicadas sin reconstruirlas localmente:
 docker compose pull
 docker compose up -d --no-build
 ```
+
+## Infraestructura con Terraform
+
+La carpeta `infra/terraform` contiene la base para crear en Oracle Cloud una VCN, una subred pública, un Internet Gateway, una IP pública reservada y una VM con Ubuntu 24.04. La imagen se selecciona automáticamente entre las imágenes compatibles disponibles en la región elegida.
+
+Los valores reales de la cuenta se guardarán en `infra/terraform/terraform.tfvars`, archivo excluido de Git. Consulta `infra/terraform/README.md` para seguir la configuración de OCI paso a paso. No ejecutes `terraform apply` sin revisar primero el plan.
 
 ## Ver la base de datos
 

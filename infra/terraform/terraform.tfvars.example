@@ -1,0 +1,9 @@
+tenancy_ocid       = "ocid1.tenancy.oc1..reemplazar"
+compartment_ocid   = "ocid1.compartment.oc1..reemplazar"
+region             = "sa-saopaulo-1"
+oci_profile        = "DEFAULT"
+ssh_public_key_path = "~/.ssh/habit_bloom_oci.pub"
+ssh_allowed_cidr    = "203.0.113.10/32"
+
+# Si VM.Standard.E2.1.Micro no está disponible en tu región, cambia este valor.
+instance_shape = "VM.Standard.E2.1.Micro"
