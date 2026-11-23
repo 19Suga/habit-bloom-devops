@@ -21,9 +21,13 @@
 
 ## Etapa 3 — Docker y rama `main`
 
-- [ ] Dockerfile del frontend.
-- [ ] Dockerfile del backend.
-- [ ] `docker-compose.yml` con dos servicios y volumen para SQLite.
+- [x] Dockerfile del frontend con compilación de React y Nginx.
+- [x] Dockerfile multi-etapa del backend.
+- [x] Nginx sirve React y redirige `/api` al backend.
+- [x] `docker-compose.yml` con dos servicios y volumen para SQLite.
+- [x] Archivos `.dockerignore` para frontend y backend.
+- [x] Imágenes construidas y contenedores saludables en Docker local.
+- [x] Frontend, API, registro y persistencia verificados localmente.
 - [ ] Pipeline de GitHub Actions en `main`.
 - [ ] Construcción de imágenes y publicación en Docker Hub.
 

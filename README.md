@@ -17,6 +17,7 @@ Aplicación MVP para registrar hábitos y cuidar rachas diarias. Usa React con V
 
 - Node.js 20 o superior.
 - npm.
+- Docker Desktop, solamente para la ejecución con contenedores.
 
 ## Ejecución rápida en Windows
 
@@ -30,15 +31,39 @@ npm run dev
 
 Abre `http://localhost:5173`. La API se ejecuta en `http://localhost:3001`.
 
+## Ejecución con Docker
+
+Docker ejecuta el frontend compilado en Nginx y el backend en Node.js. Nginx sirve la aplicación React y envía las solicitudes de `/api` al contenedor del backend.
+
+```bash
+docker compose build
+docker compose up -d
+docker compose ps
+```
+
+Abre `http://localhost`. La comprobación de salud está disponible a través de Nginx en `http://localhost/api/health` y directamente en `http://localhost:3001/api/health`.
+
+Para ver los registros o detener la aplicación:
+
+```bash
+docker compose logs -f
+docker compose down
+```
+
+Los datos de SQLite se guardan en el volumen nombrado `habit-bloom-react_habit_bloom_data`, por lo que sobreviven a `docker compose down` y a la recreación de los contenedores. No uses `docker compose down -v` si deseas conservarlos.
+
+Para personalizar `JWT_SECRET` y `APP_TIMEZONE`, crea un archivo `.env` desde `.env.example`. Antes de un despliegue real debes reemplazar la clave JWT de ejemplo.
+
 ## Estructura
 
 ```text
 habit-bloom/
-├── frontend/        React + Vite
-├── backend/         Express + better-sqlite3
-├── CHECKLIST.md     avance de la práctica
-├── iniciar.bat      inicio automático en Windows
-└── package.json     comandos generales
+├── frontend/          React + Vite, Dockerfile y Nginx
+├── backend/           Express + better-sqlite3 y Dockerfile
+├── docker-compose.yml servicios y volumen persistente
+├── CHECKLIST.md       avance de la práctica
+├── iniciar.bat        inicio automático en Windows
+└── package.json       comandos generales
 ```
 
 La base de datos se crea automáticamente en `backend/data/habit-bloom.db`. No debes crearla manualmente.

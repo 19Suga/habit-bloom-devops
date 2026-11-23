@@ -1,0 +1,30 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 3001
+      DATABASE_PATH: /app/data/habit-bloom.db
+      JWT_SECRET: ${JWT_SECRET:-cambia-esta-clave-antes-de-produccion}
+      APP_TIMEZONE: ${APP_TIMEZONE:-America/La_Paz}
+      FRONTEND_URL: http://localhost
+    ports:
+      - "3001:3001"
+    volumes:
+      - habit_bloom_data:/app/data
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    restart: unless-stopped
+
+volumes:
+  habit_bloom_data:
