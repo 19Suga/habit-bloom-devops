@@ -1,8 +1,8 @@
 resource "oci_core_vcn" "habit_bloom" {
   compartment_id = var.compartment_ocid
-  cidr_blocks     = [var.vcn_cidr]
-  display_name    = "${var.project_name}-vcn"
-  dns_label       = "habitbloom"
+  cidr_blocks    = [var.vcn_cidr]
+  display_name   = "${var.project_name}-vcn"
+  dns_label      = "habitbloom"
 }
 
 resource "oci_core_internet_gateway" "habit_bloom" {

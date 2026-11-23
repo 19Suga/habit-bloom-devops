@@ -6,7 +6,7 @@ Esta configuración crea los recursos exigidos para Habit Bloom:
 - una subred pública `10.20.1.0/24`;
 - un Internet Gateway y su ruta de salida;
 - reglas de red para SSH, HTTP y HTTPS;
-- una VM con la imagen más reciente de Ubuntu 24.04 compatible con el shape;
+- una VM ARM Always Free con 1 OCPU, 6 GB de RAM y la imagen más reciente de Ubuntu 24.04;
 - una IP pública reservada;
 - una clave pública SSH para acceder como usuario `ubuntu`.
 
@@ -28,3 +28,5 @@ Esta configuración crea los recursos exigidos para Habit Bloom:
 7. Solo después de revisar el plan, ejecutar `terraform apply`.
 
 No ejecutes `terraform apply` hasta revisar el plan, porque esa acción crea recursos reales en Oracle Cloud.
+
+Si OCI responde `Out of host capacity`, la configuración es válida pero la región no tiene un host ARM libre en ese momento. No cambies a una región de pago: vuelve a generar el plan y reintenta más tarde para conservar Always Free.

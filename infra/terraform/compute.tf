@@ -4,6 +4,11 @@ resource "oci_core_instance" "habit_bloom" {
   display_name        = "${var.project_name}-vm"
   shape               = var.instance_shape
 
+  shape_config {
+    ocpus         = var.instance_ocpus
+    memory_in_gbs = var.instance_memory_gbs
+  }
+
   create_vnic_details {
     subnet_id        = oci_core_subnet.public.id
     assign_public_ip = false
@@ -29,7 +34,7 @@ resource "oci_core_instance" "habit_bloom" {
 
 data "oci_core_vnic_attachments" "habit_bloom" {
   compartment_id = var.compartment_ocid
-  instance_id     = oci_core_instance.habit_bloom.id
+  instance_id    = oci_core_instance.habit_bloom.id
 }
 
 data "oci_core_vnic" "habit_bloom" {

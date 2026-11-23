@@ -102,7 +102,7 @@ docker compose up -d --no-build
 
 ## Infraestructura con Terraform
 
-La carpeta `infra/terraform` contiene la base para crear en Oracle Cloud una VCN, una subred pública, un Internet Gateway, una IP pública reservada y una VM con Ubuntu 24.04. La imagen se selecciona automáticamente entre las imágenes compatibles disponibles en la región elegida.
+La carpeta `infra/terraform` contiene la base para crear en Oracle Cloud una VCN, una subred pública, un Internet Gateway, una IP pública reservada y una VM ARM Always Free con Ubuntu 24.04. La imagen se selecciona automáticamente entre las imágenes compatibles disponibles en la región elegida. Las imágenes de la aplicación se publican para `linux/amd64` y `linux/arm64`.
 
 Los valores reales de la cuenta se guardarán en `infra/terraform/terraform.tfvars`, archivo excluido de Git. Consulta `infra/terraform/README.md` para seguir la configuración de OCI paso a paso. No ejecutes `terraform apply` sin revisar primero el plan.
 
